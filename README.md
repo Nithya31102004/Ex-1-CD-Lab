@@ -15,71 +15,66 @@
 # PROGRAM
 
 ```
-%{
-    int COMMENT = 0;
-%}
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
-identifier [a-zA-Z][a-zA-Z0-9]*
+#define MAX_EXPRESSION_SIZE 100
 
-%%
+int main() {
+	int i = 0, j = 0, x = 0, n, flag = 0;
+	int k;
+	char b[MAX_EXPRESSION_SIZE], d[15], c, srch;
 
-#.*                            { printf("\n%s is a PREPROCESSOR DIRECTIVE", yytext); }
+	printf("Enter the Expression terminated by $: ");
+	while ((c = getchar()) != '$' && i < MAX_EXPRESSION_SIZE - 1) {
+		b[i++] = c;
+	}
+	b[i] = '\0';
+	n = i - 1;
 
-int | float | char | double | while | for | do | if |
-break | continue | void | switch | case | long | struct | const | typedef | return | else |
-goto                            { printf("\n\t%s is a KEYWORD", yytext); }
+	printf("\nGiven Expression: %s\n", b);
 
-"/*"                           { COMMENT = 1; }
-"*/"                           { COMMENT = 0; }
+	printf("\nSymbol Table\n");
+	printf("Symbol\tType\t\tAddress\n");
 
-{identifier}\(                  { if (!COMMENT) printf("\n\nFUNCTION\n\t%s", yytext); }
+	for (j = 0; j <= n; j++) {
+		c = b[j];
+		if (isalpha((unsigned char)c)) {
+			int alreadyExists = 0;
+			for (k = 0; k < x; k++) {
+				if (d[k] == c) {
+					alreadyExists = 1;
+					break;
+				}
+			}
 
-\{                              { if (!COMMENT) printf("\n BLOCK BEGINS"); }
-\}                              { if (!COMMENT) printf("\n BLOCK ENDS"); }
+			if (!alreadyExists) {
+				d[x] = c;
+				printf("%c\tidentifier\t%p\n", c, (void*)&d[x]);
+				x++;
+			}
+		}
+	}
 
-{identifier}(\[[0-9]*\])?       { if (!COMMENT) printf("\n %s IDENTIFIER", yytext); }
+	// Clear input buffer
+	while ((c = getchar()) != '\n' && c != EOF);
 
-\".*\"                          { if (!COMMENT) printf("\n\t%s is a STRING", yytext); }
+	printf("\nEnter the symbol to search: ");
+	srch = getchar();
 
-[0-9]+                          { if (!COMMENT) printf("\n\t%s is a NUMBER", yytext); }
+	for (i = 0; i < x; i++) {
+		if (srch == d[i]) {
+			printf("Symbol Found\n");
+			flag = 1;
+			break;
+		}
+	}
+	if (flag == 0)
+		printf("Symbol Not Found\n");
 
-\)(\;)?                         { 
-                                    if (!COMMENT) { 
-                                        printf("\n\t"); 
-                                        ECHO; 
-                                        printf("\n"); 
-                                    } 
-                                }
-
-\(                              { ECHO; }
-
-=                               { if (!COMMENT) printf("\n\t%s is an ASSIGNMENT OPERATOR", yytext); }
-
-\<= | \>= | \< | == | \>        { if (!COMMENT) printf("\n\t%s is a RELATIONAL OPERATOR", yytext); }
-
-%%
-
-int main(int argc, char **argv)
-{
-    if (argc > 1)
-    {
-        FILE *file;
-        file = fopen(argv[1], "r");
-        if (!file)
-        {
-            printf("could not open %s \n", argv[1]);
-            exit(0);
-        }
-        yyin = file;
-    }
-    yylex();
-    printf("\n\n");
-    return 0;
-}
-
-int yywrap()
-{
-    return 0;
+	return 0;
 }
 
 ```
