@@ -84,7 +84,8 @@ int yywrap()
 
 ```
 # OUTPUT
-<img width="1459" height="893" alt="image" src="https://github.com/user-attachments/assets/0a603a5c-120a-4bc5-8182-f9f3153da870" />
+<img width="1220" height="869" alt="image" src="https://github.com/user-attachments/assets/733cdc5e-0720-4dda-aaaa-4e7ab9a007db" />
+<img width="1424" height="847" alt="image" src="https://github.com/user-attachments/assets/7737aaa2-109d-4ed0-89fc-b196a8caaa38" />
 
 # RESULT
 ### The program to implement a symbol table is executed and the output is verified.
